@@ -1,0 +1,9 @@
+[submodule "oh-my-zsh"]
+	path = oh-my-zsh
+	url = git://github.com/robbyrussell/oh-my-zsh.git
+[submodule "vundle"]
+	path = vundle
+	url = https://github.com/gmarik/vundle.git
+[submodule "smarthosts"]
+	path = smarthosts
+	url = https://github.com/smarthosts/smarthosts.git
