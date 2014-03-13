@@ -108,9 +108,9 @@ vnoremap <S-Del> "+x
 vnoremap <C-C> "+y
 vnoremap <C-Insert> "+y
 " CTRL-V and SHIFT-Insert are Paste
-map <C-V> "+gP
+"map <C-V> "+gP
 map <S-Insert> "+gP
-cmap <C-V> <C-R>+
+"cmap <C-V> <C-R>+
 cmap <S-Insert> <C-R>+
 " Pasting blockwise and linewise selections is not possible in Insert and
 " Visual mode without the +virtualedit feature.  They are pasted as if they
@@ -180,12 +180,12 @@ Bundle "tpope/vim-surround"
 Bundle "Raimondi/delimitMate"
 "配色
 Bundle "altercation/vim-colors-solarized"
-if has('gui_running')
-		set background=light
-else
-		set background=dark
-endif
-colorscheme solarized
+"if has('gui_running')
+"		set background=light
+"else
+"		set background=dark
+"endif
+colorscheme desert
 " scripts not on GitHub
 "Bundle 'git://git.wincent.com/command-t.git'
 " git repos on your local machine (i.e. when working on your own plugin)
