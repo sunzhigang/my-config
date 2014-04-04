@@ -75,6 +75,8 @@ nnoremap <space> @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR>
 set smartcase        		" 如果搜索模式包含大写字符，不使用 'ignorecase'选项。只有在输入搜索模式并且打开 'ignorecase' 选项时才会使用。
 set smartindent        		" 智能对齐方式"
 set tabstop=4        		" 设置制表符(tab键)的宽度"
+set expandtab               "使用space代替tab.
+set shiftwidth=4            "自动缩进的宽度。
 set cursorline              " 突出显示当前行"
 set nobackup                " 覆盖文件时不备份"
 set guioptions-=T           " 隐藏工具栏
