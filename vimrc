@@ -77,7 +77,6 @@ set smartindent        		" 智能对齐方式"
 set tabstop=4        		" 设置制表符(tab键)的宽度"
 set expandtab               "使用space代替tab.
 set shiftwidth=4            "自动缩进的宽度。
-set cursorline              " 突出显示当前行"
 set nobackup                " 覆盖文件时不备份"
 set guioptions-=T           " 隐藏工具栏
 set guioptions-=m           " 隐藏菜单栏
