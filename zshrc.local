@@ -1,2 +1,4 @@
 export PATH=$PATH:~/bin
+alias vim='vim -n'
+alias vi='vim -n'
 alias cdpkg='cdpkg() { cd ~/packages/"$1"/trunk; } ;cdpkg'
