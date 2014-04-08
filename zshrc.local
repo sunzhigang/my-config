@@ -1,0 +1,2 @@
+export PATH=$PATH:~/bin
+alias cdpkg='cdpkg() { cd ~/packages/"$1"/trunk; } ;cdpkg'

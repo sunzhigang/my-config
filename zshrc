@@ -3320,3 +3320,5 @@ zrclocal
 # Local variables:
 # mode: sh
 # End:
+
+test -f ~/.zshrc.local && source ~/.zshrc.local

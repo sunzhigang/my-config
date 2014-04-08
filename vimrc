@@ -1,7 +1,38 @@
+" An example for a vimrc file.
+"
+" Maintainer:	Bram Moolenaar <Bram@vim.org>
+" Last change:	2011 Apr 15
+"
+" To use it, copy it to
+"     for Unix and OS/2:  ~/.vimrc
+"	      for Amiga:  s:.vimrc
+"  for MS-DOS and Win32:  $VIM\_vimrc
+"	    for OpenVMS:  sys$login:.vimrc
+
+" When started as "evim", evim.vim will already have done these settings.
+if v:progname =~? "evim"
+  finish
+endif
+
+" Use Vim settings, rather than Vi settings (much better!).
+" This must be first, because it changes other options as a side effect.
 set nocompatible
+
+" allow backspacing over everything in insert mode
+set backspace=indent,eol,start
+
+if has("vms")
+  set nobackup		" do not keep a backup file, use versions instead
+else
+  set backup		" keep a backup file
+endif
 set history=50		" keep 50 lines of command line history
+set ruler		" show the cursor position all the time
 set showcmd		" display incomplete commands
 set incsearch		" do incremental searching
+
+" For Win32 GUI: remove 't' flag from 'guioptions': no tearoff menu entries
+" let &guioptions = substitute(&guioptions, "t", "", "g")
 
 " Don't use Ex mode, use Q for formatting
 map Q gq
@@ -64,184 +95,4 @@ if !exists(":DiffOrig")
 		  \ | wincmd p | diffthis
 endif
 
-set autowrite
-set autoread
-
-"" Ctags
-set tags=tags;
-set autochdir
-"用空格键来开关折叠
-nnoremap <space> @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR>
-set smartcase        		" 如果搜索模式包含大写字符，不使用 'ignorecase'选项。只有在输入搜索模式并且打开 'ignorecase' 选项时才会使用。
-set smartindent        		" 智能对齐方式"
-set tabstop=4        		" 设置制表符(tab键)的宽度"
-set expandtab               "使用space代替tab.
-set shiftwidth=4            "自动缩进的宽度。
-set nobackup                " 覆盖文件时不备份"
-set guioptions-=T           " 隐藏工具栏
-set guioptions-=m           " 隐藏菜单栏
-"--状态行设置--
-set laststatus=2 			"总显示最后一个窗口的状态行；设为1则窗口数多于一个的时候显示最后一个窗口的状态行；0不显示最后一个窗口的状态行
-set ruler           		"标尺，用于显示光标位置的行号和列号，逗号分隔。每个窗口都有自己的标尺。如果窗口有状态行，标尺在那里显示。否则，它显示在屏幕的最后一行上。
-set statusline=\ %<%F[%1*%M%*%n%R%H]%=\ %y\ %0(%{&fileformat}\ %{&encoding}\ %c:%l/%L%)\ 
-"
-""--命令行设置--
-set showcmd            		" 命令行显示输入的命令
-set showmode        		" 命令行显示vim当前模式
-
-"--find setting--
-set incsearch        " 输入字符串就显示匹配点
-set hlsearch        
-
-"--快捷键
-nnoremap <C-n> :bnext<CR>
-nnoremap <C-p> :bprevious<CR>
-nnoremap <A-Left> <C-w>h
-nnoremap <A-Down> <C-w>j
-nnoremap <A-Up> <C-w>k
-nnoremap <A-Right> <C-w>l
-map <A-t> :NERDTreeToggle<CR>
-map <C-t> :TlistToggle<CR>
-" CTRL-X and SHIFT-Del are Cut
-vnoremap <C-X> "+x
-vnoremap <S-Del> "+x
-" CTRL-C and CTRL-Insert are Copy
-vnoremap <C-C> "+y
-vnoremap <C-Insert> "+y
-" CTRL-V and SHIFT-Insert are Paste
-"map <C-V> "+gP
-map <S-Insert> "+gP
-"cmap <C-V> <C-R>+
-cmap <S-Insert> <C-R>+
-" Pasting blockwise and linewise selections is not possible in Insert and
-" Visual mode without the +virtualedit feature.  They are pasted as if they
-" were characterwise instead.
-" Uses the paste.vim autoload script.
-exe 'inoremap <script> <C-V>' paste#paste_cmd['i']
-exe 'vnoremap <script> <C-V>' paste#paste_cmd['v']
-imap <S-Insert> <C-V>
-vmap <S-Insert> <C-V>
-" Use CTRL-Q to do what CTRL-V used to do
-noremap <C-Q> <C-V>
-
-
-"" --------------------Bundle---------------------------
-
-set nocompatible              " be iMproved, required
-filetype off                  " required
-
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
-" alternatively, pass a path where Vundle should install bundles
-"let path = '~/some/path/here'
-"call vundle#rc(path)
-
-" let Vundle manage Vundle, required
-Bundle 'gmarik/vundle'
-
-" The following are examples of different formats supported.
-" Keep bundle commands between here and filetype plugin indent on.
-" scripts on GitHub repos
-"Bundle 'tpope/vim-fugitive'
-"Bundle 'Lokaltog/vim-easymotion'
-"Bundle 'tpope/vim-rails.git'
-" The sparkup vim script is in a subdirectory of this repo called vim.
-" Pass the path to set the runtimepath properly.
-"Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
-" scripts from http://vim-scripts.org/vim/scripts.html
-"Bundle 'L9'
-"Bundle 'FuzzyFinder'
-Bundle 'taglist.vim'
-let Tlist_Show_One_File = 1            "不同时显示多个文件的tag，只显示当前文件的
-let Tlist_Exit_OnlyWindow = 1          "如果taglist窗口是最后一个窗口，则退出vim
-let Tlist_Use_Right_Window = 1         "在右侧窗口中显示taglist窗口
-Bundle 'cscope.vim'
-Bundle 'scrooloose/nerdtree'
-Bundle 'a.vim'
-Bundle 'bling/vim-bufferline'
-"实时语法检查
-Bundle 'Syntastic'
-"显示函数(Gvim鼠标悬浮)
-Bundle 'echofunc.vim'
-"自动补全
-Bundle 'Rip-Rip/clang_complete'
-Bundle 'SuperTab'
-Bundle 'neocomplcache'
-Bundle 'osyo-manga/neocomplcache-clang_complete'
-"用于补全括号和引号
-Bundle "Yggdroot/indentLine"
-"实时显示git更改
-Bundle "airblade/vim-gitgutter"
-"使用Gitv命令查看Git详细提交日志(类似gitk)
-Bundle "fugitive.vim"
-Bundle "gregsexton/gitv"
-Bundle "tpope/vim-commentary"
-Bundle "tpope/vim-surround"
-Bundle "Raimondi/delimitMate"
-"配色
-Bundle "altercation/vim-colors-solarized"
-"if has('gui_running')
-"		set background=light
-"else
-"		set background=dark
-"endif
-colorscheme desert
-" scripts not on GitHub
-"Bundle 'git://git.wincent.com/command-t.git'
-" git repos on your local machine (i.e. when working on your own plugin)
-"Bundle 'file:///home/gmarik/path/to/plugin'
-" ...
-
-filetype plugin indent on     " required
-" To ignore plugin indent changes, instead use:
-"filetype plugin on
-"
-" Brief help
-" :BundleList          - list configured bundles
-" :BundleInstall(!)    - install (update) bundles
-" :BundleSearch(!) foo - search (or refresh cache first) for foo
-" :BundleClean(!)      - confirm (or auto-approve) removal of unused bundles
-"
-" see :h vundle for more details or wiki for FAQ
-" NOTE: comments after Bundle commands are not allowed.
-" Put your stuff after this line
-
-
-"" taglist.vim
-let Tlist_Show_One_File=1
-let Tlist_Exit_OnlyWindow=1
-let Tlist_File_Fold_Auto_Close=1
-
-let g:SuperTabDefaultCompletionType = '<C-X><C-U>'
-
-" Disable AutoComplPop.
-let g:acp_enableAtStartup = 0
-" Use neocomplcache.
-let g:neocomplcache_enable_at_startup = 1
-" Use smartcase.
-let g:neocomplcache_enable_smart_case = 1
-" Use camel case completion.
-let g:neocomplcache_enable_camel_case_completion = 1
-" Use underbar completion.
-let g:neocomplcache_enable_underbar_completion = 1
-" Set minimum syntax keyword length.
-let g:neocomplcache_min_syntax_length = 2
-let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
-let g:neocomplcache_enable_ignore_case = 0
-
-if !exists('g:neocomplcache_force_omni_patterns')
-	let g:neocomplcache_force_omni_patterns = {}
-endif
-let g:neocomplcache_force_overwrite_completefunc = 1
-let g:neocomplcache_force_omni_patterns.c =
-			\ '[^.[:digit:] *\t]\%(\.\|->\)'
-let g:neocomplcache_force_omni_patterns.cpp =
-			\ '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
-let g:neocomplcache_force_omni_patterns.objc =
-			\ '[^.[:digit:] *\t]\%(\.\|->\)'
-let g:neocomplcache_force_omni_patterns.objcpp =
-			\ '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
-let g:clang_complete_auto = 0
-let g:clang_auto_select = 0
-"let g:clang_use_library = 1
+source ~/.vimrc.local
