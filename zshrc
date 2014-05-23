@@ -536,7 +536,12 @@ export PAGER=${PAGER:-less}
 export MAIL=${MAIL:-/var/mail/$USER}
 
 # if we don't set $SHELL then aterm, rxvt,.. will use /bin/sh or /bin/bash :-/
-export SHELL='/bin/zsh'
+if [[ -z "$SHELL" ]] ; then
+  SHELL="$(which zsh)"
+  if [[ -x "$SHELL" ]] ; then
+    export SHELL
+  fi
+fi
 
 # color setup for ls:
 check_com -c dircolors && eval $(dircolors -b)
@@ -770,7 +775,7 @@ grmlcomp() {
 
     # use generic completion system for programs not yet defined; (_gnu_generic works
     # with commands that provide a --help option with "standard" gnu-like output.)
-    for compcom in cp deborphan df feh fetchipac head hnb ipacsum mv \
+    for compcom in cp deborphan df feh fetchipac gpasswd head hnb ipacsum mv \
                    pal stow tail uname ; do
         [[ -z ${_comps[$compcom]} ]] && compdef _gnu_generic ${compcom}
     done; unset compcom
@@ -2532,6 +2537,7 @@ compdef _functions freload
 #f1# List symlinks in detail (more detailed version of 'readlink -f' and 'whence -s')
 sll() {
     [[ -z "$1" ]] && printf 'Usage: %s <file(s)>\n' "$0" && return 1
+    local file
     for file in "$@" ; do
         while [[ -h "$file" ]] ; do
             ls -l $file
@@ -2544,26 +2550,31 @@ sll() {
 #   PAGER='less -Mr' - If so, the use of $PAGER here needs fixing
 # with respect to wordsplitting. (ie. ${=PAGER})
 if check_com -c $PAGER ; then
-    #f3# View Debian's changelog of a given package
+    #f3# View Debian's changelog of given package(s)
     dchange() {
         emulate -L zsh
-        if [[ -r /usr/share/doc/$1/changelog.Debian.gz ]] ; then
-            $PAGER /usr/share/doc/$1/changelog.Debian.gz
-        elif [[ -r /usr/share/doc/$1/changelog.gz ]] ; then
-            $PAGER /usr/share/doc/$1/changelog.gz
-        else
-            if check_com -c aptitude ; then
-                echo "No changelog for package $1 found, using aptitude to retrieve it."
-                if isgrml ; then
-                    aptitude -t unstable changelog $1
-                else
-                    aptitude changelog $1
-                fi
+        [[ -z "$1" ]] && printf 'Usage: %s <package_name(s)>\n' "$0" && return 1
+
+        local package
+        for package in "$@" ; do
+            if [[ -r /usr/share/doc/${package}/changelog.Debian.gz ]] ; then
+                $PAGER /usr/share/doc/${package}/changelog.Debian.gz
+            elif [[ -r /usr/share/doc/${package}/changelog.gz ]] ; then
+                $PAGER /usr/share/doc/${package}/changelog.gz
+            elif [[ -r /usr/share/doc/${package}/changelog ]] ; then
+                $PAGER /usr/share/doc/${package}/changelog
             else
-                echo "No changelog for package $1 found, sorry."
-                return 1
+                if check_com -c aptitude ; then
+                    echo "No changelog for package $package found, using aptitude to retrieve it."
+                    aptitude changelog "$package"
+                elif check_com -c apt-get ; then
+                    echo "No changelog for package $package found, using apt-get to retrieve it."
+                    apt-get changelog "$package"
+                else
+                    echo "No changelog for package $package found, sorry."
+                fi
             fi
-        fi
+        done
     }
     _dchange() { _files -W /usr/share/doc -/ }
     compdef _dchange dchange
@@ -2748,11 +2759,6 @@ if check_com vim; then
         VIM_PLEASE_SET_TITLE='yes' command vim ${VIM_OPTIONS} "$@"
     }
 fi
-
-# make a backup of a file
-bk() {
-    cp -a "$1" "${1}_$(date --iso-8601=seconds)"
-}
 
 ssl_hashes=( sha512 sha256 sha1 md5 )
 
@@ -3320,5 +3326,4 @@ zrclocal
 # Local variables:
 # mode: sh
 # End:
-
 test -f ~/.zshrc.local && source ~/.zshrc.local
