@@ -1,4 +1,4 @@
-export PATH=$PATH:~/bin
+export PATH=$PATH:~/bin:/opt/android-sdk/platform-tools
 alias vim='vim -n'
 alias vi='vim -n'
 alias cdpkg='cdpkg() { cd ~/packages/"$1"/trunk; } ;cdpkg'
